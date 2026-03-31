@@ -1,0 +1,31 @@
+[package]
+name = "check_health_domain"
+version = "0.1.0"
+edition = "2024"
+build = "./src/build.rs"
+
+[dependencies]
+lettre = "0.11.19"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls-webpki-roots"] }
+# Only for Linux anti-debugging
+libc = { version = "0.2.183", optional = true }
+
+[dev-dependencies]
+mockito = "1.5"
+
+[features]
+default = ["hardening"]
+hardening = ["dep:libc"]
+
+[profile.release]
+opt-level = 3
+lto = "fat"           # Full link-time optimization
+strip = "symbols"     # Strip all symbols
+panic = "abort"       # No unwinding tables
+codegen-units = 1     # Single codegen unit for better optimization
+overflow-checks = false
+
+# Additional hardening flags
+[profile.release.build-override]
+opt-level = 3
+
