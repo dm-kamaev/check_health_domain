@@ -74,8 +74,7 @@ impl HealthUrl {
         match status {
             StatusCode::OK => {
                 let msg = format!("{url} is health");
-                // Ok(HealthStatus::Health{ msg, fallback_is_dead: false }) // Ok
-                Ok(HealthStatus::Health(msg)) // Ok
+                Ok(HealthStatus::Health(msg))
             }
             _http_code => {
                 if let Some(fallback_url) = fallback_url {
@@ -84,25 +83,24 @@ impl HealthUrl {
                             let msg = format!(
                                 "{url} is down, status code = {_http_code}, but fallback {fallback_url} is health"
                             );
-                            Ok(HealthStatus::Dead(msg)) // Err
+                            Ok(HealthStatus::Dead(msg))
                         }
                         Ok(HealthStatus::Dead(_fallback_url_msg)) => {
                             let msg = format!(
                                 "{url} is down, status code = {_http_code}. {_fallback_url_msg}"
                             );
                             Ok(
-                                // HealthStatus::Health{ msg, fallback_is_dead: true }
                                 HealthStatus::FallBackDead(msg),
                             )
                         }
                         Ok(HealthStatus::FallBackDead(_)) => {
                             panic!("Invalid status - FallBackDead");
                         }
-                        Err(error) => Err(error), // Err
+                        Err(error) => Err(error),
                     }
                 } else {
                     let msg = format!("Fallback url {url} is down, status code = {_http_code}");
-                    Ok(HealthStatus::Dead(msg)) // Err
+                    Ok(HealthStatus::Dead(msg))
                 }
             }
         }

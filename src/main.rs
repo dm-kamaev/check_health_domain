@@ -229,10 +229,8 @@ mod tests {
         assert!(result.is_ok());
         assert!(result.unwrap().contains("is health"));
 
-        // No email should be sent
         assert!(get_sent_messages().is_empty());
 
-        // Ensure all retries actually happened
         m1.assert();
         m2.assert();
         m3.assert();
