@@ -104,7 +104,6 @@ impl SmtpTransportTrait for SmtpTransportFake {
     }
 
     fn send(&self, message: &Message) -> Result<(), Box<dyn Error>> {
-        // Save the message to our thread-local storage!
         MOCK_SENT_MESSAGES.with(|messages| {
             messages.borrow_mut().push(message.clone());
         });
@@ -147,7 +146,7 @@ pub trait SendEmail {
 impl<InputTransport: SmtpTransportTrait> SendEmail for EmailDeliverySDK<InputTransport> {
     fn send(
         &self,
-				recipients: Vec<impl Into<String>>,
+		recipients: Vec<impl Into<String>>,
         subject: impl Into<String>,
         mail_body: impl Into<String>,
     ) -> Result<(), Box<dyn Error>> {
